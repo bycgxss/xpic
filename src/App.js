@@ -1,5 +1,5 @@
-import React from 'react'
-import './App.css';
+import React, {Suspense, lazy} from 'react'
+import './App.css'
 
 import {
   Switch,
@@ -8,22 +8,26 @@ import {
 
 import Header from './components/Header'
 import Footer from './components/Footer'
-import Home from './pages/Home'
-import History from './pages/History'
-import About from './pages/About'
+import Loading from './components/Loading'
+
+const Home = lazy(() => import('./pages/Home'))
+const History = lazy(() => import('./pages/History'))
+const About = lazy(() => import('./pages/About'))
 
 function App() {
   return (
     <div className="app">
       <Header/>
-      <Switch>
-        <Route path='/' exact component={Home} />
-        <Route path='/history' component={History} />
-        <Route path='/about' component={About} />
-      </Switch>
+      <Suspense fallback={<Loading />}>
+        <Switch>
+          <Route path='/' exact component={Home}/>
+          <Route path='/history' component={History}/>
+          <Route path='/about' component={About}/>
+        </Switch>
+      </Suspense>
       <Footer/>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
