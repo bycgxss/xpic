@@ -30,6 +30,12 @@ function Header() {
         <StyledLink to='/history' activeClassName='active'>上传历史</StyledLink>
         <StyledLink to='/about' activeClassName='active'>关于我</StyledLink>
       </nav>
+      <button>
+        <StyledLink to='/login'>登陆</StyledLink>
+      </button>
+      <button>
+        <StyledLink to='/register'>注册</StyledLink>
+      </button>
     </StyledHeader>
   )
 }

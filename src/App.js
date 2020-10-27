@@ -13,6 +13,8 @@ import Loading from './components/Loading'
 const Home = lazy(() => import('./pages/Home'))
 const History = lazy(() => import('./pages/History'))
 const About = lazy(() => import('./pages/About'))
+const Login = lazy(() => import('./pages/Login'))
+const Register = lazy(() => import('./pages/Register'))
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
             <Route path='/' exact component={Home}/>
             <Route path='/history' component={History}/>
             <Route path='/about' component={About}/>
+            <Route path='/Login' component={Login}/>
+            <Route path='/Register' component={Register}/>
           </Switch>
         </Suspense>
       </main>
