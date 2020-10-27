@@ -1,7 +1,8 @@
-import React from 'react'
+import React, {useState} from 'react'
 import Logo from './logo.svg'
 import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
+import { Button } from 'antd'
 
 const StyledHeader = styled.header`
   background-color: #02101f;
@@ -21,7 +22,16 @@ const StyledLink = styled(NavLink)`
   }
 `
 
+const StyledLogin = styled.div`
+  margin-left: auto;
+  color: #fff;
+  > button {
+    margin-left: 10px;
+  }
+`
+
 function Header() {
+  const [isLogin, setIsLogin] = useState(false)
   return (
     <StyledHeader>
       <img src={Logo} alt=""/>
@@ -30,12 +40,19 @@ function Header() {
         <StyledLink to='/history' activeClassName='active'>上传历史</StyledLink>
         <StyledLink to='/about' activeClassName='active'>关于我</StyledLink>
       </nav>
-      <button>
-        <StyledLink to='/login'>登陆</StyledLink>
-      </button>
-      <button>
-        <StyledLink to='/register'>注册</StyledLink>
-      </button>
+      <StyledLogin>
+        {
+          isLogin ?
+            <>
+              bycgxss <Button type="primary" onClick={() => setIsLogin(false)}>注销</Button>
+            </>
+          :
+            <>
+              <Button type="primary" onClick={() => setIsLogin(true)}>登陆</Button>
+              <Button type="primary">注册</Button>
+            </>
+        }
+      </StyledLogin>
     </StyledHeader>
   )
 }
