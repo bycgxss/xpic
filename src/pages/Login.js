@@ -1,6 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
 import {Form, Input, Button} from 'antd'
+import {useStores} from '../stores'
+import {useHistory} from 'react-router-dom'
 
 const layout = {
   labelCol: {
@@ -29,7 +31,20 @@ const Wraper = Styled.div`
 `
 
 const Register = () => {
+  const {AuthStore} = useStores()
+  const history = useHistory()
+
+
   const onFinish = (values) => {
+    AuthStore.setUserName(values.username)
+    AuthStore.setPassWord(values.password)
+    AuthStore.login()
+      .then(() => {
+        history.push('/')
+      })
+      .catch(() => {
+        console.log('登陆失败,什么也不做')
+      })
     console.log('Success:', values)
   }
 
@@ -94,13 +109,8 @@ const Register = () => {
           <Input.Password/>
         </Form.Item>
 
-
-
-
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            登陆
-          </Button>
+          <Button type="primary" htmlType="submit">登陆</Button>
         </Form.Item>
 
       </Form>

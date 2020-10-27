@@ -1,8 +1,10 @@
-import React, {useState} from 'react'
+import React from 'react'
 import Logo from './logo.svg'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { Button } from 'antd'
+import { useStores } from '../stores'
+import { observer } from 'mobx-react'
 
 const StyledHeader = styled.header`
   background-color: #02101f;
@@ -30,8 +32,28 @@ const StyledLogin = styled.div`
   }
 `
 
-function Header() {
-  const [isLogin, setIsLogin] = useState(false)
+const Header = observer(() => {
+  const {UserStore, AuthStore} = useStores()
+  const history = useHistory()
+
+  const handleLogout = () => {
+    AuthStore.logout()
+    history.push('/')
+  }
+
+  const handleLogin = () => {
+    console.log('跳转到登陆页面')
+    history.push('/login')
+  }
+
+  const handleRegister = () => {
+    console.log('跳转到注册页面')
+    history.push('/register')
+
+  }
+
+
+
   return (
     <StyledHeader>
       <img src={Logo} alt=""/>
@@ -42,19 +64,19 @@ function Header() {
       </nav>
       <StyledLogin>
         {
-          isLogin ?
+          UserStore.currentUser ?
             <>
-              bycgxss <Button type="primary" onClick={() => setIsLogin(false)}>注销</Button>
+              {UserStore.currentUser.attributes.username } <Button type="primary" onClick={() => handleLogout()}>注销</Button>
             </>
           :
             <>
-              <Button type="primary" onClick={() => setIsLogin(true)}>登陆</Button>
-              <Button type="primary">注册</Button>
+              <Button type="primary" onClick={() => handleLogin()}>登陆</Button>
+              <Button type="primary" onClick={() => handleRegister()}>注册</Button>
             </>
         }
       </StyledLogin>
     </StyledHeader>
   )
-}
+})
 
 export default Header

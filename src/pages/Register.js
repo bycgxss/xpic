@@ -1,6 +1,8 @@
 import React from 'react'
 import Styled from 'styled-components'
 import {Form, Input, Button} from 'antd'
+import {useStores} from '../stores'
+import {useHistory} from 'react-router-dom'
 
 const layout = {
   labelCol: {
@@ -29,8 +31,19 @@ const Wraper = Styled.div`
 `
 
 const Register = () => {
+  const {AuthStore} = useStores()
+  const history = useHistory()
+
   const onFinish = (values) => {
-    console.log('Success:', values)
+    AuthStore.setUserName(values.username)
+    AuthStore.setPassWord(values.password)
+    AuthStore.register()
+      .then(() => {
+        history.push('/')
+      })
+      .catch(() => {
+        console.log('注册失败，什么也不做')
+      })
   }
 
   const onFinishFailed = (errorInfo) => {
@@ -48,7 +61,7 @@ const Register = () => {
     }
   }
 
-  const confirmPassword = ({ getFieldValue }) => ({
+  const confirmPassword = ({getFieldValue}) => ({
     validator(rule, value) {
       if (!value || getFieldValue('password') === value) {
         return Promise.resolve()
