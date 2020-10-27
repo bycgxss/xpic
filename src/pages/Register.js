@@ -12,8 +12,8 @@ const layout = {
 }
 const tailLayout = {
   wrapperCol: {
-    offset: 4,
-    span: 20,
+    offset: 12,
+    span: 12,
   },
 }
 
@@ -37,6 +37,27 @@ const Register = () => {
     console.log('Failed:', errorInfo)
   }
 
+  const Validators = {
+    username(rule, value, callback) {
+      if (value.length === 0) return callback()
+      if (/\W/.test(value)) return callback('请输入字母、数字或下划线！')
+      if (value.length < 3) return callback('用户名长度不能小于3位')
+      if (value.length > 10) return callback('用户名长度不能大于10位')
+
+      callback()
+    }
+  }
+
+  const confirmPassword = ({ getFieldValue }) => ({
+    validator(rule, value) {
+      if (!value || getFieldValue('password') === value) {
+        return Promise.resolve()
+      }
+      return Promise.reject('两次密码不匹配！')
+    }
+  })
+
+
   return (
     <Wraper>
       <h1>注册</h1>
@@ -54,6 +75,9 @@ const Register = () => {
               required: true,
               message: '请输入用户名!',
             },
+            {
+              validator: Validators.username
+            }
           ]}
         >
           <Input/>
@@ -67,6 +91,14 @@ const Register = () => {
               required: true,
               message: '请输入密码!',
             },
+            {
+              min: 6,
+              message: '请至少输入6位字符！'
+            },
+            {
+              max: 16,
+              message: '超出限制，最多16位字符！'
+            }
           ]}
         >
           <Input.Password/>
@@ -80,6 +112,7 @@ const Register = () => {
               required: true,
               message: '请再次输入密码!',
             },
+            confirmPassword
           ]}
         >
           <Input.Password/>
