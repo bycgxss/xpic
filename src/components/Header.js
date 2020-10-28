@@ -2,7 +2,7 @@ import React from 'react'
 import Logo from './logo.svg'
 import { NavLink, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import { useStores } from '../stores'
 import { observer } from 'mobx-react'
 
@@ -38,6 +38,7 @@ const Header = observer(() => {
 
   const handleLogout = () => {
     AuthStore.logout()
+    message.info('已注销')
     history.push('/')
   }
 

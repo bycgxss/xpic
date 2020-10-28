@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import {Form, Input, Button} from 'antd'
+import {Form, Input, Button, message} from 'antd'
 import {useStores} from '../stores'
 import {useHistory} from 'react-router-dom'
 
@@ -43,6 +43,7 @@ const Register = () => {
         history.push('/')
       })
       .catch(() => {
+        message.error('登陆失败')
         console.log('登陆失败,什么也不做')
       })
     console.log('Success:', values)

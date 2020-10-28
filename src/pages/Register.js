@@ -1,6 +1,6 @@
 import React from 'react'
 import Styled from 'styled-components'
-import {Form, Input, Button} from 'antd'
+import {Form, Input, Button, message} from 'antd'
 import {useStores} from '../stores'
 import {useHistory} from 'react-router-dom'
 
@@ -39,9 +39,11 @@ const Register = () => {
     AuthStore.setPassWord(values.password)
     AuthStore.register()
       .then(() => {
+        message.info('注册成功')
         history.push('/')
       })
       .catch(() => {
+        message.error('注册失败')
         console.log('注册失败，什么也不做')
       })
   }
