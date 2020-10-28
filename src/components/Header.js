@@ -20,7 +20,7 @@ const StyledLink = styled(NavLink)`
   color: #fff;
   margin-left: 50px;
   &.active {
-    border-bottom: 1px solid #fff;
+    color: rgb(53, 150, 255);
   }
 `
 
