@@ -1,9 +1,10 @@
 import React, {useRef} from 'react'
 import {useStores} from '../stores'
 import {observer, useLocalStore} from 'mobx-react'
-import {Upload, message} from 'antd'
+import {Upload, message, Spin} from 'antd'
 import {InboxOutlined} from '@ant-design/icons'
 import styled from 'styled-components'
+
 const {Dragger} = Upload
 
 const ResultDiv = styled.div`
@@ -34,10 +35,10 @@ const Uploader = observer(() => {
     },
 
     get widthStr() {
-      return store.width ? `/w/${store.width}`: ''
+      return store.width ? `/w/${store.width}` : ''
     },
     get heightStr() {
-      return store.height ? `/h/${store.height}`: ''
+      return store.height ? `/h/${store.height}` : ''
     },
     get fullStr() {
       return ImageStore.serverFile.attributes.url.attributes.url + '?imageView2/0' + store.widthStr + store.heightStr
@@ -61,6 +62,14 @@ const Uploader = observer(() => {
         message.warning('请先登陆！')
         return false
       }
+      if (!/(svg$)|(png$)|(jpg$)|(jpeg$)|(gif$)/ig.test(file.type)) {
+        message.error('只能上传.png/.svg/.jpg/.jpeg/.gif格式的图片')
+        return false
+      }
+      if (file.size > 1024 * 1024) {
+        message.error('只能上传1M大小的图片')
+        return false
+      }
       ImageStore.uploader()
         .then((serverFile) => {
           console.log('上传成功')
@@ -75,36 +84,38 @@ const Uploader = observer(() => {
 
   return (
     <div>
-      <Dragger {...props}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined/>
-        </p>
-        <p className="ant-upload-text">Click or drag file to this area to upload</p>
-        <p className="ant-upload-hint">
-          Support for a single or bulk upload. Strictly prohibit from uploading company data or other
-          band files
-        </p>
-      </Dragger>
+      <Spin tip="上传中" spinning={ImageStore.isUploading}>
+        <Dragger {...props}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined/>
+          </p>
+          <p className="ant-upload-text">点击或拖拽即可上传</p>
+          <p className="ant-upload-hint">
+            仅支持.png/.svg/.jpg/.jpeg/.gif格式图片，可上传1M大小的图片
+          </p>
+        </Dragger>
+      </Spin>
       {
         ImageStore.serverFile
-        ? <ResultDiv>
+          ? <ResultDiv>
             <h1>上传结果：</h1>
             <dl>
               <dt>线上地址：</dt>
-              <dd><a href={ImageStore.serverFile.attributes.url.attributes.url} target="_blank" rel="noreferrer">{ImageStore.serverFile.attributes.url.attributes.url}</a></dd>
+              <dd><a href={ImageStore.serverFile.attributes.url.attributes.url} target="_blank"
+                     rel="noreferrer">{ImageStore.serverFile.attributes.url.attributes.url}</a></dd>
               <dt>文件名：</dt>
               <dd>{ImageStore.filename}</dd>
               <dt>图片预览：</dt>
               <dd><img src={ImageStore.serverFile.attributes.url.attributes.url} alt=""/></dd>
               <dt>更多尺寸（px）：</dt>
               <dd>
-                最大宽度：<input type="text" onChange={bindWidthChange} placeholder="可选" ref={widthRef}/>
-                最大高度：<input type="text" onChange={bindHeightChange} placeholder="可选" ref={heightRef}/>
+                最大宽度：<input type="number" onChange={bindWidthChange} placeholder="可选" ref={widthRef}/>
+                最大高度：<input type="number" onChange={bindHeightChange} placeholder="可选" ref={heightRef}/>
               </dd>
               <dd><a href={store.fullStr} target="_blank" rel="noreferrer">{store.fullStr}</a></dd>
             </dl>
           </ResultDiv>
-        : null
+          : null
       }
     </div>
   )
