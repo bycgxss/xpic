@@ -37,7 +37,7 @@ const Uploader = {
     const item = new AV.Object('Image')
     const avFile = new AV.File(filename, file)
     item.set('filename', filename)
-    item.set('owner', AV.User.current())
+    item.set('owner', AV.User.current)
     item.set('url', avFile)
     return new Promise((resolve, reject) => {
       item.save().then((serverFile) => resolve(serverFile), error => reject(error))
@@ -50,7 +50,7 @@ const Uploader = {
     query.limit(limit)
     query.skip(page * limit)
     query.descending('createdAt')
-    query.equalTo('owner', AV.User.current())
+    query.equalTo('owner', AV.User.current)
     return new Promise((resolve, reject) => {
       query.find()
         .then(res => resolve(res))
