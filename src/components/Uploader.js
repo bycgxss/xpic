@@ -19,6 +19,7 @@ const ResultDiv = styled.div`
 
 
 const Uploader = observer(() => {
+
   const {ImageStore, UserStore} = useStores()
   const widthRef = useRef()
   const heightRef = useRef()
@@ -70,13 +71,12 @@ const Uploader = observer(() => {
         message.error('只能上传1M大小的图片')
         return false
       }
-      ImageStore.uploader()
+      ImageStore.upload()
         .then((serverFile) => {
           console.log('上传成功')
-          console.log(serverFile)
         })
-        .catch(() => {
-          console.log('上传失败')
+        .catch((e) => {
+          console.log(e)
         })
       return false
     }
@@ -96,13 +96,13 @@ const Uploader = observer(() => {
         </Dragger>
       </Spin>
       {
-        ImageStore.serverFile
-          ? <ResultDiv>
+        ImageStore.serverFile ?
+          <ResultDiv>
             <h1>上传结果：</h1>
             <dl>
               <dt>线上地址：</dt>
               <dd><a href={ImageStore.serverFile.attributes.url.attributes.url} target="_blank"
-                     rel="noreferrer">{ImageStore.serverFile.attributes.url.attributes.url}</a></dd>
+                     rel="noopener noreferrer" >{ImageStore.serverFile.attributes.url.attributes.url}</a></dd>
               <dt>文件名：</dt>
               <dd>{ImageStore.filename}</dd>
               <dt>图片预览：</dt>
@@ -112,7 +112,7 @@ const Uploader = observer(() => {
                 最大宽度：<input type="number" onChange={bindWidthChange} placeholder="可选" ref={widthRef}/>
                 最大高度：<input type="number" onChange={bindHeightChange} placeholder="可选" ref={heightRef}/>
               </dd>
-              <dd><a href={store.fullStr} target="_blank" rel="noreferrer">{store.fullStr}</a></dd>
+              <dd><a href={store.fullStr} target="_blank" rel="noopener noreferrer">{store.fullStr}</a></dd>
             </dl>
           </ResultDiv>
           : null

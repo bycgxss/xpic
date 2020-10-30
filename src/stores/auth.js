@@ -1,22 +1,22 @@
-import {observable, action, makeAutoObservable} from 'mobx'
+import {observable, action} from 'mobx'
 import {Auth} from '../models'
+import {message} from 'antd'
 import UserStore from './user'
+import HistoryStore from './history'
+import ImageStore from './image'
 
 class AuthStore {
-  constructor() {
-    makeAutoObservable(this)
-  }
 
   @observable values = {
     username: '',
     password: ''
   }
 
-  @action setUserName(username) {
+  @action setUsername(username) {
     this.values.username = username
   }
 
-  @action setPassWord(password) {
+  @action setPassword(password) {
     this.values.password = password
   }
 
@@ -25,11 +25,11 @@ class AuthStore {
       Auth.login(this.values.username, this.values.password)
         .then(user => {
           UserStore.pullUser()
-          console.log(user)
           resolve(user)
         })
         .catch(err => {
           UserStore.resetUser()
+          message.error('登陆失败')
           reject(err)
         })
     })
@@ -40,11 +40,11 @@ class AuthStore {
       Auth.register(this.values.username, this.values.password)
         .then(user => {
           UserStore.pullUser()
-          console.log(user)
           resolve(user)
         })
         .catch(err => {
           UserStore.resetUser()
+          message.error('注册失败')
           reject(err)
         })
     })
@@ -53,6 +53,8 @@ class AuthStore {
   @action logout() {
     Auth.logout()
     UserStore.resetUser()
+    HistoryStore.reset()
+    ImageStore.reset()
   }
 
 }

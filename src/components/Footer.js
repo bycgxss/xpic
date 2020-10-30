@@ -12,7 +12,7 @@ const StyledFooter = styled.footer`
 function Footer() {
   return (
     <StyledFooter>
-      <p>Footer</p>
+      <p>版权所有：<span role="img" aria-label={''}>️©️</span>bycgxss</p>
     </StyledFooter>
   )
 }

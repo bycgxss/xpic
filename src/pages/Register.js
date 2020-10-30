@@ -1,8 +1,9 @@
 import React from 'react'
-import Styled from 'styled-components'
-import {Form, Input, Button, message} from 'antd'
-import {useStores} from '../stores'
 import {useHistory} from 'react-router-dom'
+import Styled from 'styled-components'
+import {Form, Input, Button} from 'antd'
+import {useStores} from '../stores'
+
 
 const layout = {
   labelCol: {
@@ -34,41 +35,42 @@ const Register = () => {
   const {AuthStore} = useStores()
   const history = useHistory()
 
-  const onFinish = (values) => {
-    AuthStore.setUserName(values.username)
-    AuthStore.setPassWord(values.password)
+  const onFinish = values => {
+    AuthStore.setUsername(values.username)
+    AuthStore.setPassword(values.password)
     AuthStore.register()
       .then(() => {
-        message.info('注册成功')
         history.push('/')
       })
-      .catch(() => {
-        message.error('注册失败')
-        console.log('注册失败，什么也不做')
+      .catch((e) => {
+        console.log(e)
       })
   }
 
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo)
   }
 
-  const Validators = {
-    username(rule, value, callback) {
-      if (value.length === 0) return callback()
-      if (/\W/.test(value)) return callback('请输入字母、数字或下划线！')
-      if (value.length < 3) return callback('用户名长度不能小于3位')
-      if (value.length > 10) return callback('用户名长度不能大于10位')
+  // const Validators = {
+  //   username(rule, value, callback) {
+  //     if (value.length === 0) return callback()
+  //     if (/\W/.test(value)) return callback('请输入字母、数字或下划线！')
+  //     if (value.length < 3) return callback('用户名长度不能小于3位')
+  //     if (value.length > 10) return callback('用户名长度不能大于10位')
+  //     callback()
+  //   }
+  // }
 
-      callback()
-    }
+  const validateUsername = (rule, value) => {
+    if (/\W/.test(value)) return Promise.reject('只能是字母数字下划线')
+    if (value.length < 4 || value.length > 10) return Promise.reject('长度为4～10个字符')
+    return Promise.resolve()
   }
 
-  const confirmPassword = ({getFieldValue}) => ({
+  const validateConfirm = ({getFieldValue}) => ({
     validator(rule, value) {
-      if (!value || getFieldValue('password') === value) {
-        return Promise.resolve()
-      }
-      return Promise.reject('两次密码不匹配！')
+      if (getFieldValue('password') === value) return Promise.resolve()
+      return Promise.reject('两次密码不一致')
     }
   })
 
@@ -91,7 +93,7 @@ const Register = () => {
               message: '请输入用户名!',
             },
             {
-              validator: Validators.username
+              validator: validateUsername
             }
           ]}
         >
@@ -107,12 +109,12 @@ const Register = () => {
               message: '请输入密码!',
             },
             {
-              min: 6,
-              message: '请至少输入6位字符！'
+              min: 4,
+              message: '请至少输入4位字符！'
             },
             {
               max: 16,
-              message: '超出限制，最多16位字符！'
+              message: '超出限制，最多10位字符！'
             }
           ]}
         >
@@ -127,7 +129,7 @@ const Register = () => {
               required: true,
               message: '请再次输入密码!',
             },
-            confirmPassword
+            validateConfirm
           ]}
         >
           <Input.Password/>

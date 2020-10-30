@@ -1,10 +1,7 @@
-import {observable, action, makeAutoObservable} from 'mobx'
+import {observable, action} from 'mobx'
 import {Auth} from '../models'
 
 class UserStore {
-  constructor() {
-    makeAutoObservable(this)
-  }
 
   @observable currentUser = null
 

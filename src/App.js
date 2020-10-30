@@ -1,10 +1,6 @@
 import React, {Suspense, lazy} from 'react'
 import './App.css'
-
-import {
-  Switch,
-  Route
-} from 'react-router-dom'
+import {Switch, Route} from 'react-router-dom'
 
 import Header from './components/Header'
 import Footer from './components/Footer'
@@ -26,8 +22,8 @@ function App() {
             <Route path='/' exact component={Home}/>
             <Route path='/history' component={History}/>
             <Route path='/about' component={About}/>
-            <Route path='/Login' component={Login}/>
-            <Route path='/Register' component={Register}/>
+            <Route path='/login' component={Login}/>
+            <Route path='/register' component={Register}/>
           </Switch>
         </Suspense>
       </main>

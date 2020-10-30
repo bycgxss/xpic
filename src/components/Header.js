@@ -1,10 +1,10 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Logo from './logo.svg'
-import { NavLink, useHistory } from 'react-router-dom'
+import {NavLink, useHistory} from 'react-router-dom'
 import styled from 'styled-components'
-import { Button, message } from 'antd'
-import { useStores } from '../stores'
-import { observer } from 'mobx-react'
+import {Button} from 'antd'
+import {useStores} from '../stores'
+import {observer} from 'mobx-react'
 
 const StyledHeader = styled.header`
   background-color: #02101f;
@@ -33,27 +33,30 @@ const StyledLogin = styled.div`
 `
 
 const Header = observer(() => {
+
   const {UserStore, AuthStore} = useStores()
   const history = useHistory()
 
   const handleLogout = () => {
     AuthStore.logout()
-    message.info('已注销')
     history.push('/')
   }
 
   const handleLogin = () => {
-    console.log('跳转到登陆页面')
+    console.log('跳转到登录页面')
     history.push('/login')
   }
 
   const handleRegister = () => {
     console.log('跳转到注册页面')
     history.push('/register')
-
   }
 
-
+  /* eslint-disable */
+  useEffect(() => {
+    UserStore.pullUser()
+  }, [])
+  /* eslint-enable */
 
   return (
     <StyledHeader>
@@ -67,12 +70,12 @@ const Header = observer(() => {
         {
           UserStore.currentUser ?
             <>
-              {UserStore.currentUser.attributes.username } <Button type="primary" onClick={() => handleLogout()}>注销</Button>
+              {UserStore.currentUser.attributes.username} <Button type="primary" onClick={handleLogout}>注销</Button>
             </>
-          :
+            :
             <>
-              <Button type="primary" onClick={() => handleLogin()}>登陆</Button>
-              <Button type="primary" onClick={() => handleRegister()}>注册</Button>
+              <Button type="primary" onClick={handleLogin}>登陆</Button>
+              <Button type="primary" onClick={handleRegister}>注册</Button>
             </>
         }
       </StyledLogin>

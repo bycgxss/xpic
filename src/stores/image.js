@@ -1,11 +1,8 @@
-import {observable, action, makeAutoObservable} from 'mobx'
+import {observable, action} from 'mobx'
 import {Uploader} from '../models'
 import {message} from 'antd'
 
 class ImageStore {
-  constructor() {
-    makeAutoObservable(this)
-  }
 
   @observable filename = ''
   @observable file = null
@@ -20,7 +17,7 @@ class ImageStore {
     this.file = newFile
   }
 
-  @action uploader() {
+  @action upload() {
     this.isUploading = true
     this.serverFile = null
     return new Promise((resolve, reject) => {
@@ -37,10 +34,12 @@ class ImageStore {
           this.isUploading = false
         })
     })
-
   }
 
-
+  @action reset() {
+    this.isUploading = false
+    this.serverFile = null
+  }
 }
 
 export default new ImageStore()
