@@ -1,7 +1,8 @@
 {
-  "name": "react-epic-teach",
+  "name": "xpic",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@babel/core": "7.9.0",
     "@babel/plugin-proposal-decorators": "^7.8.3",
